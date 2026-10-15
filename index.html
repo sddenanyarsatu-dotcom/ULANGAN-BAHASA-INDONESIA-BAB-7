@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Edukatif Bahasa Indonesia Kelas VI - Bab 7</title>
+<style>
+:root{--bg:#f2f6ff;--card:#fff;--ink:#1e293b;--muted:#64748b;--primary:#5b5ce2;--accent:#13b8a6;--line:#dbe3f0;--good:#dcfce7;--bad:#fee2e2}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,#edf2ff,#ecfeff);color:var(--ink)}
+header{padding:28px 16px;text-align:center;background:linear-gradient(120deg,#4f46e5,#0891b2);color:white}
+header h1{margin:0 0 8px;font-size:clamp(24px,4vw,36px)}header p{margin:4px auto;max-width:800px}
+main{max-width:1000px;margin:22px auto;padding:0 14px 40px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 8px 24px #33415512}
+h2{margin-top:0;color:#4338ca}h3{margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{display:block;font-weight:650;margin:10px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:white}textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:11px;padding:12px 17px;font:inherit;font-weight:750;cursor:pointer;background:var(--primary);color:white;margin:5px 5px 5px 0}button.secondary{background:#e2e8f0;color:#1e293b}button.teal{background:#0f9f91}button:disabled{opacity:.45;cursor:not-allowed}
+.small{color:var(--muted);font-size:.93rem}.hidden{display:none!important}.progress{height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:12px 0}.progress div{height:100%;background:linear-gradient(90deg,#6366f1,#14b8a6);width:0}
+.q{padding:16px;border:1px solid var(--line);border-radius:14px;margin:14px 0;background:#fcfdff}.q p{font-weight:700;margin:0 0 12px}.choice{display:flex;gap:10px;align-items:flex-start;padding:9px;border-radius:9px;font-weight:450;cursor:pointer}.choice:hover{background:#eef2ff}.choice input{width:auto;margin-top:5px}.pill{display:inline-block;background:#e0e7ff;color:#3730a3;padding:5px 10px;border-radius:999px;font-size:.85rem;font-weight:750}
+.matchrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:8px 0}.matchrow span{padding:8px;background:#f1f5f9;border-radius:8px}.notice{padding:12px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe}.result{font-size:1.15rem;font-weight:800}.footer{text-align:center;color:var(--muted);font-size:.9rem}
+@media(max-width:600px){.card{padding:16px}.matchrow{grid-template-columns:1fr}.matchrow span{margin-bottom:-5px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌟 Game Edukatif Bahasa Indonesia</h1>
+  <p><strong>Kelas VI · Bab 7: Aku Bisa Berempati</strong></p>
+  <p>Belajar memahami perasaan, menghargai perbedaan, dan menyampaikan gagasan dengan santun.</p>
+</header>
+<main>
+<section class="card" id="loginCard">
+  <h2>🔐 Login Siswa</h2>
+  <p class="small">Pilih nama sesuai daftar, lalu masukkan NIPD sebagai password.</p>
+  <div class="grid">
+    <div><label for="student">Nama siswa</label><select id="student"><option value="">-- Pilih nama siswa --</option></select></div>
+    <div><label for="nipd">NIPD / Password</label><input id="nipd" type="password" inputmode="numeric" placeholder="Masukkan NIPD"></div>
+  </div>
+  <button onclick="login()">Mulai Ulangan 🚀</button>
+  <p id="loginMsg" role="status" class="small"></p>
+</section>
+
+<section class="card hidden" id="intro">
+  <h2>📚 Misi Empati Dimulai!</h2>
+  <p id="welcome"></p>
+  <div class="grid">
+    <div class="notice"><strong>🧩 15</strong><br>Pilihan Ganda</div>
+    <div class="notice"><strong>☑️ 5</strong><br>Pilihan Ganda Kompleks</div>
+    <div class="notice"><strong>🔗 5</strong><br>Menjodohkan</div>
+    <div class="notice"><strong>✍️ 10</strong><br>Isian Singkat</div>
+    <div class="notice"><strong>📝 5</strong><br>Uraian</div>
+  </div>
+  <p class="small">Petunjuk: bacalah setiap soal dengan cermat. Pada pilihan ganda kompleks, pilih semua jawaban yang benar. Untuk uraian, tuliskan jawaban dengan kalimat sendiri.</p>
+  <button onclick="startQuiz()">Mulai Mengerjakan</button>
+</section>
+
+<section class="card hidden" id="quizCard">
+  <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+    <h2 style="margin:0">🎯 Misi Kuis</h2><span class="pill" id="counter">0 / 40 soal</span>
+  </div>
+  <div class="progress"><div id="progressFill"></div></div>
+  <form id="quizForm">
+    <div id="questions"></div>
+    <button type="button" class="teal" onclick="submitQuiz()">Selesaikan & Lihat Hasil 🏆</button>
+  </form>
+</section>
+
+<section class="card hidden" id="resultCard">
+  <h2>🏆 Hasil Ulangan</h2>
+  <p id="studentResult"></p>
+  <p class="result" id="scoreResult"></p>
+  <p id="feedback"></p>
+  <div id="detailResult" class="notice"></div>
+  <h3 style="margin-top:18px">Refleksi singkat</h3>
+  <label for="reflection">Apa satu hal tentang empati yang kamu pelajari?</label>
+  <textarea id="reflection" placeholder="Tuliskan refleksimu..."></textarea>
+  <button onclick="emailResult()">📧 Siapkan Email Hasil</button>
+  <button class="secondary" onclick="copyResult()">Salin Laporan</button>
+  <button class="secondary" onclick="window.print()">Cetak / Simpan PDF</button>
+  <p class="small">Email akan dibuka dengan laporan yang sudah disiapkan. Periksa isinya lalu tekan tombol Kirim pada aplikasi email.</p>
+  <p id="copyMsg" class="small" role="status"></p>
+</section>
+<p class="footer">Game pembelajaran • Bahasa Indonesia Kelas VI • Bab 7: Aku Bisa Berempati</p>
+</main>
+<script>
+const students = [
+["ABID ALVARO GAVRIEL","2759"],["AFFIN CHARLISA ACHYARNIS","2760"],["ALBY FAREL AXEL FAIRUS","2761"],["ANGGRAITA DARA KUSUMANINGRUM","2762"],["ARGA ADAM ALFATIR","2763"],["ARIF AZHARI SETIAWAN","2764"],["AZIZ SATRIO PRAMBUDI","2765"],["AZKA KHOIRUNNISA","2766"],["BILQIS ZAHIRA ALYA AZIZA","2820"],["DANIEL IRKHAM YUNIANTO","2767"],["DELTA DANIES WICAKSONO","2768"],["ELVINA NOVITA SARI","2769"],["FATIN DESTIANA SHIDQIA","2770"],["IAN THU ALFIAN","2771"],["KHALISA ZAHRA RAMADHANI","2772"],["LABIBAH ANINDYA JIHAN TALITA ULFA","2774"],["MAYDA NURUL AZKIA","2775"],["MUHAMMAD AMIRRUDIN","2776"],["MUHAMMAD EZA HAFIZ ADITIYA","2777"],["MUHAMMAD RIFKY CAHYO SAPUTRO","2778"],["NURIYA JANNATUN NAIM","2779"],["PRABU AHMAD AHNAFI","2780"],["QEYLA ABSHARI FIRDA RAHMADANI","2848"],["RAHMAT MAULANA","2781"],["RAVA'EL DWI VANDIMAS","2782"],["RAVE'AL DIMAS PRAYOGA","2783"],["RISMACERLYN NUR ISKANDAR","2784"],["SAMUEL DESWA ANGGARA","2785"],["VAHDIL ASKA HARIANSYAH","2824"]
+];
+const mc = [
+["Tindakan yang menunjukkan empati kepada teman baru adalah ...",["Mengabaikannya","Mengajaknya berkenalan dan bermain","Menertawakan logatnya","Menyuruhnya selalu mengikuti kita"],1],
+["Saat teman bercerita tentang kesulitannya, sikap terbaik adalah ...",["Memotong ceritanya","Menyebarkan ceritanya","Mendengarkan dengan penuh perhatian","Menyalahkannya"],2],
+["Ungkapan “ringan tangan” dapat bermakna ...",["Suka membantu","Mudah marah","Tidak peduli","Suka berbohong"],0],
+["Peribahasa “berat sama dipikul, ringan sama dijinjing” mengajarkan ...",["Bersaing tanpa aturan","Bekerja sama dalam suka dan duka","Menghindari tanggung jawab","Mementingkan diri sendiri"],1],
+["Pernyataan yang termasuk fakta adalah ...",["Semua anak baru pasti pemalu","Perpustakaan sekolah memiliki 500 buku menurut catatan inventaris","Anak yang berbeda selalu sulit berteman","Puisi terbaik pasti paling panjang"],1],
+["Pernyataan yang termasuk mitos atau anggapan belum terbukti adalah ...",["Data kehadiran tercatat di buku kelas","Air membeku pada suhu sekitar 0°C pada tekanan normal","Anak yang memakai kacamata pasti tidak pandai olahraga","Hasil pemilihan dihitung oleh panitia"],2],
+["Dalam bermain peran tentang empati, hal yang perlu diperhatikan ialah ...",["Mempermalukan pemeran lain","Menggunakan ejekan agar lucu","Menghayati perasaan tokoh dan berbicara santun","Mengabaikan jalan cerita"],2],
+["Tema puisi adalah ...",["Gagasan pokok yang dibicarakan puisi","Nama penerbit","Jumlah paragraf dalam resensi","Daftar harga buku"],0],
+["Pesan puisi biasanya berisi ...",["Nomor halaman","Amanat atau hal yang ingin disampaikan penyair","Nama toko buku","Daftar tokoh drama"],1],
+["Kalimat yang menunjukkan inklusivitas adalah ...",["Kegiatan hanya untuk anak tertentu","Semua siswa mendapat kesempatan berpartisipasi sesuai kebutuhannya","Teman yang berbeda tidak boleh bergabung","Pendapat satu orang selalu benar"],1],
+["Kalimat majemuk bertingkat terdapat pada pilihan ...",["Rani membaca buku dan Bima menggambar.","Kami tetap mengajak Frida bermain karena ia juga teman kami.","Pintu kelas berwarna biru.","Mereka tersenyum."],1],
+["Bagian resensi yang memuat gambaran singkat isi buku disebut ...",["Sinopsis","Daftar hadir","Kwitansi","Iklan layanan"],0],
+["Data buku dalam resensi dapat meliputi ...",["Judul, penulis, penerbit, dan tahun terbit","Nama seluruh pembaca","Jadwal piket kelas","Harga semua buku di perpustakaan"],0],
+["Penilaian dalam resensi sebaiknya ...",["Berisi hinaan","Disertai alasan yang jelas dan santun","Hanya menyalin sampul","Tidak berkaitan dengan isi buku"],1],
+["Jika melihat teman dikucilkan, tindakan yang tepat adalah ...",["Ikut mengucilkan","Diam karena bukan urusan kita","Mengajaknya bergabung dan meminta bantuan guru bila perlu","Merekam lalu menyebarkannya"],2]
+];
+const complex = [
+["Pilih semua tindakan yang menunjukkan empati.",["Mendengarkan tanpa mengejek","Menawarkan bantuan sesuai kebutuhan","Memaksa teman bercerita","Menghargai perasaan teman"],[0,1,3]],
+["Pilih pernyataan yang benar tentang mitos dan fakta.",["Fakta dapat diperiksa melalui bukti","Mitos selalu benar karena sering diulang","Pendapat pribadi belum tentu fakta","Informasi perlu diperiksa sumbernya"],[0,2,3]],
+["Pilih ciri puisi yang dapat dianalisis.",["Tema","Pesan/amanat","Pilihan kata","Nomor induk siswa sebagai unsur wajib"],[0,1,2]],
+["Pilih kalimat majemuk bertingkat.",["Frida tersenyum ketika teman-temannya menyapanya.","Kami membantu karena ia kesulitan membawa buku.","Ibu membaca, sedangkan ayah memasak.","Mereka bermain."],[0,1]],
+["Pilih hal yang layak dicantumkan dalam resensi buku.",["Identitas buku","Sinopsis singkat","Penilaian beserta alasan","Komentar menghina penulis"],[0,1,2]]
+];
+const match = [
+["Empati","Memahami dan peduli terhadap perasaan orang lain"],
+["Ringan tangan","Suka menolong"],
+["Tema puisi","Gagasan pokok puisi"],
+["Kalimat majemuk bertingkat","Kalimat dengan induk dan anak kalimat"],
+["Resensi","Ulasan atau penilaian terhadap buku"]
+];
+const shortQs = [
+["Ungkapan “buah tangan” berarti ....",["oleh oleh","oleh-oleh"]],
+["Orang yang memberi ulasan terhadap buku menulis sebuah ....",["resensi"]],
+["Gagasan pokok yang dibahas dalam puisi disebut ....",["tema"]],
+["Informasi yang dapat dibuktikan dengan data disebut ....",["fakta"]],
+["Anggapan yang dipercaya tetapi belum tentu terbukti disebut ....",["mitos"]],
+["Sikap memahami perasaan orang lain disebut ....",["empati"]],
+["Bagian resensi yang menceritakan isi buku secara ringkas disebut ....",["sinopsis"]],
+["Kalimat yang memiliki induk kalimat dan anak kalimat disebut kalimat majemuk ....",["bertingkat"]],
+["Sebutkan satu tindakan sederhana untuk membantu teman yang sedih.",["mendengarkan","menghibur","menemani","membantu","bertanya"]],
+["Peribahasa “berat sama dipikul, ringan sama dijinjing” mengajarkan sikap ....",["kerja sama","bekerja sama","gotong royong","kebersamaan"]]
+];
+const essayQs = [
+["Jelaskan dua tindakan empati yang dapat kamu lakukan ketika ada teman baru di kelas.",3],
+["Apa perbedaan mitos dan fakta? Berikan masing-masing satu contoh yang aman dan dekat dengan kehidupan sekolah.",3],
+["Bacalah puisi mini ini: “Kau datang sendiri / kusapa dengan ramah / kini kita melangkah bersama.” Tuliskan tema dan pesan puisi tersebut.",3],
+["Buatlah satu kalimat majemuk bertingkat tentang sikap inklusif. Garisbawahi anak kalimatnya dengan tanda kurung.",3],
+["Tuliskan contoh resensi singkat sebuah buku yang pernah kamu baca. Sertakan judul, penulis (jika ingat), sinopsis, dan penilaianmu beserta alasan.",3]
+];
+let currentStudent=null, started=false, submitted=false, reportText="";
+const $=id=>document.getElementById(id);
+students.forEach((s,i)=>{const o=document.createElement("option");o.value=i;o.textContent=s[0];$("student").appendChild(o)});
+function login(){
+ const idx=$("student").value, pass=$("nipd").value.trim();
+ if(idx===""){ $("loginMsg").textContent="Silakan pilih nama siswa.";return; }
+ if(pass!==students[Number(idx)][1]){$("loginMsg").textContent="Nama atau NIPD tidak sesuai. Periksa kembali.";return;}
+ currentStudent=students[Number(idx)];
+ $("loginCard").classList.add("hidden");$("intro").classList.remove("hidden");
+ $("welcome").textContent=`Selamat datang, ${currentStudent[0]}! Siap menyelesaikan 40 soal tentang empati?`;
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ let h="",n=0;
+ h+='<h3>Bagian A — Pilihan Ganda <span class="pill">15 soal</span></h3>';
+ mc.forEach((q,i)=>{h+=`<div class="q"><p>${++n}. ${esc(q[0])}</p>`;q[1].forEach((a,j)=>h+=`<label class="choice"><input type="radio" name="mc${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(a)}</span></label>`);h+='</div>'});
+ h+='<h3>Bagian B — Pilihan Ganda Kompleks <span class="pill">5 soal</span></h3>';
+ complex.forEach((q,i)=>{h+=`<div class="q"><p>${++n}. ${esc(q[0])}</p><p class="small">Pilih semua jawaban yang benar.</p>`;q[1].forEach((a,j)=>h+=`<label class="choice"><input type="checkbox" name="cx${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${esc(a)}</span></label>`);h+='</div>'});
+ h+='<h3>Bagian C — Menjodohkan <span class="pill">5 soal</span></h3><div class="q"><p>Pasangkan istilah di kiri dengan arti yang tepat.</p>';
+ const opts=match.map(m=>m[1]).sort(()=>0.5-Math.random());
+ match.forEach((m,i)=>{h+=`<div class="matchrow"><span>${++n}. <strong>${esc(m[0])}</strong></span><select name="mt${i}"><option value="">-- Pilih arti --</option>${opts.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join("")}</select></div>`});h+='</div>';
+ h+='<h3>Bagian D — Isian Singkat <span class="pill">10 soal</span></h3>';
+ shortQs.forEach((q,i)=>h+=`<div class="q"><p>${++n}. ${esc(q[0])}</p><input name="sh${i}" placeholder="Ketik jawaban singkat..." autocomplete="off"></div>`);
+ h+='<h3>Bagian E — Uraian <span class="pill">5 soal</span></h3>';
+ essayQs.forEach((q,i)=>h+=`<div class="q"><p>${++n}. ${esc(q[0])}</p><textarea name="es${i}" placeholder="Tuliskan jawabanmu dengan jelas..."></textarea></div>`);
+ $("questions").innerHTML=h;
+ $("questions").addEventListener("change",updateProgress);$("questions").addEventListener("input",updateProgress);updateProgress();
+}
+function startQuiz(){if(started)return;started=true;$("intro").classList.add("hidden");$("quizCard").classList.remove("hidden");render();window.scrollTo({top:0,behavior:"smooth"})}
+function updateProgress(){
+ const inputs=[...$("questions").querySelectorAll("input,select,textarea")];const filled=inputs.filter(x=>x.type==="checkbox"||x.type==="radio"?x.checked:x.value.trim()!=="").length;
+ $("counter").textContent=`${filled} isian terisi`; $("progressFill").style.width=(filled/inputs.length*100)+"%";
+}
+function norm(s){return (s||"").toLowerCase().trim().replace(/[.,!?;:]/g,"").replace(/\s+/g," ")}
+function submitQuiz(){
+ if(submitted)return;
+ if(!confirm("Yakin ingin menyelesaikan ulangan? Setelah dikirim, jawaban tidak dapat diubah."))return;
+ submitted=true;
+ let points=0, max=40, breakdown=[];
+ mc.forEach((q,i)=>{const v=$(`quizForm`).querySelector(`input[name="mc${i}"]:checked`);if(v&&Number(v.value)===q[2])points++;});
+ let complexCorrect=0;complex.forEach((q,i)=>{const chosen=[...document.querySelectorAll(`input[name="cx${i}"]:checked`)].map(x=>Number(x.value)).sort();const correct=[...q[2]].sort();if(chosen.length===correct.length&&chosen.every((v,j)=>v===correct[j])){points++;complexCorrect++;}});
+ let matchCorrect=0;match.forEach((m,i)=>{const v=document.querySelector(`[name="mt${i}"]`).value;if(v===m[1]){points++;matchCorrect++;}});
+ let shortCorrect=0;shortQs.forEach((q,i)=>{const v=norm(document.querySelector(`[name="sh${i}"]`).value);if(q[1].some(a=>v===norm(a)||v.includes(norm(a)))){points++;shortCorrect++;}});
+ // Essay responses are evaluated by the teacher, so the score shown is provisional for 35 auto-graded items.
+ const essays=essayQs.map((q,i)=>document.querySelector(`[name="es${i}"]`).value.trim());
+ const autoMax=35, pct=Math.round(points/autoMax*100);
+ reportText=`HASIL ULANGAN BAHASA INDONESIA KELAS VI\nBab 7: Aku Bisa Berempati\nNama: ${currentStudent[0]}\nNIPD: ${currentStudent[1]}\nSkor otomatis: ${points}/${autoMax} (${pct}%)\nPilihan ganda benar: ${mc.filter((q,i)=>{const v=document.querySelector(`input[name="mc${i}"]:checked`);return v&&Number(v.value)===q[2]}).length}/15\nPilihan ganda kompleks benar: ${complexCorrect}/5\nMenjodohkan benar: ${matchCorrect}/5\nIsian singkat benar: ${shortCorrect}/10\nUraian (perlu diperiksa guru):\n${essays.map((a,i)=>`${i+1}. ${a||"(belum dijawab)"}`).join("\n")}\nRefleksi: ${$("reflection").value.trim()||"(belum diisi)"}\nCatatan: skor otomatis hanya menilai 35 soal objektif. Lima soal uraian dinilai oleh guru.`;
+ $("quizCard").classList.add("hidden");$("resultCard").classList.remove("hidden");
+ $("studentResult").textContent=`Nama: ${currentStudent[0]} · NIPD: ${currentStudent[1]}`;
+ $("scoreResult").textContent=`Skor otomatis: ${points} / ${autoMax} (${pct}%)`;
+ $("feedback").textContent=pct>=85?"Hebat! Kamu menunjukkan pemahaman yang sangat baik.":pct>=70?"Bagus! Tinjau kembali beberapa materi agar makin paham.":"Tetap semangat! Pelajari kembali materi dan diskusikan jawaban bersama guru.";
+ $("detailResult").innerHTML=`Pilihan ganda: <strong>${mc.filter((q,i)=>{const v=document.querySelector(`input[name="mc${i}"]:checked`);return v&&Number(v.value)===q[2]}).length}/15</strong> · Pilihan ganda kompleks: <strong>${complexCorrect}/5</strong> · Menjodohkan: <strong>${matchCorrect}/5</strong> · Isian singkat: <strong>${shortCorrect}/10</strong><br><br><strong>Catatan:</strong> lima soal uraian belum termasuk skor otomatis dan perlu dinilai oleh guru.`;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function emailResult(){
+ if(!submitted)return;
+ const subject=encodeURIComponent(`Hasil Ulangan Bahasa Indonesia Bab 7 - ${currentStudent[0]}`);
+ const body=encodeURIComponent(reportText);
+ window.location.href=`mailto:danysetyanto.ds@gmail.com?subject=${subject}&body=${body}`;
+}
+async function copyResult(){
+ if(!submitted)return;
+ try{await navigator.clipboard.writeText(reportText);$("copyMsg").textContent="Laporan berhasil disalin. Tempelkan ke email atau dokumen."}
+ catch(e){const t=document.createElement("textarea");t.value=reportText;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();$("copyMsg").textContent="Laporan disalin. Tempelkan ke email atau dokumen."}
+}
+</script>
+</body>
+</html>
